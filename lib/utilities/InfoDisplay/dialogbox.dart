@@ -4,9 +4,6 @@ import 'package:rating_dialog/rating_dialog.dart';
 
 class ShowDialog {
   void changeMyPassowrd(BuildContext context, Function onPress) async {
-    TextEditingController _oldPasswordController = TextEditingController();
-    TextEditingController _newPasswordController = TextEditingController();
-
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -16,40 +13,67 @@ class ShowDialog {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                TextFormField(
-                  controller: _oldPasswordController,
-                  keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    label: Text("Old Password"),
-                    prefixIcon: Icon(Icons.lock_outline),
-                  ),
-                ),
                 addVerticalSpace(15),
-                TextFormField(
-                  controller: _newPasswordController,
-                  keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    label: Text("New Password"),
-                    prefixIcon: Icon(Icons.lock_outline),
-                  ),
-                ),
-                addVerticalSpace(15),
-                Text('Would you like to approve of this message?'),
+                const Text(
+                    'Please check you registered Mail box for a Password reset Email '),
               ],
             ),
           ),
           actions: <Widget>[
             ElevatedButton(
-              child: Text('Cancel'),
+              child: Text('Okay'),
               onPressed: () {
                 Navigator.of(context).pop();
+                onPress;
               },
             ),
+          ],
+        );
+      },
+    );
+  }
+
+  void reportBug(BuildContext context, Function onPress) async {
+    TextEditingController reportBug = TextEditingController();
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Report Bug'),
+              IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.black,
+                  ))
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                addVerticalSpace(15),
+                const Text('Please Describe your issue'),
+                addVerticalSpace(15),
+                TextField(
+                  controller: reportBug,
+                  decoration:
+                      const InputDecoration(border: OutlineInputBorder()),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
             ElevatedButton(
-              child: Text('Update'),
+              child: Text('Submit'),
               onPressed: () {
+                Navigator.of(context).pop();
                 onPress;
               },
             ),
@@ -67,24 +91,24 @@ class ShowDialog {
         return RatingDialog(
           initialRating: 1.0,
           // your app's name?
-          title: Text(
-            'Feedback Form',
+          title: const Text(
+            'Experience Rating',
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
             ),
           ),
           // encourage your user to leave a high rating?
-          message: Text(
-            'Tap a star to set your rating. Add more description here if you want.',
+          message: const Text(
+            'Tap a star to set your rating. \n And Leave us a comment.',
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 15),
+            style: TextStyle(fontSize: 15),
           ),
           // your app's logo?
           image: const FlutterLogo(size: 100),
           submitButtonText: 'Submit',
-          commentHint: 'Set your custom comment hint',
+          commentHint: 'Leave a comment (Optional)',
           onCancelled: () => print('cancelled'),
           onSubmitted: (response) {
             print('rating: ${response.rating}, comment: ${response.comment}');

@@ -11,21 +11,24 @@ class HistoryPage extends StatelessWidget {
       ),
       body: Container(
           height: MediaQuery.of(context).size.height,
-          color: Colors.amber,
           child: ListView.separated(
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.all(12),
                 child: Container(
-                  height: 300,
-                  color: Colors.blueAccent,
+                  // height: 300,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(15)),
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: const [
                         Text(
-                            " Case ID: \n Date: Time: \n Requeseted Service : \n Message : \n Response Message : "),
+                          " Case ID: \n Date:                  Time: \n Requeseted Service : \n Message : \n Response Message : ",
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ],
                     ),
                   ),

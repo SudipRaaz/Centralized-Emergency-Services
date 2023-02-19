@@ -1,6 +1,7 @@
 import 'package:ems_project/page_layout.dart';
 import 'package:ems_project/utilities/routes/routes.dart';
 import 'package:ems_project/view/dashboard_page.dart';
+import 'package:ems_project/view/user_guide_page.dart';
 import 'package:flutter/material.dart';
 import '../../view/login_page.dart';
 import '../../view/register_page.dart';
@@ -9,7 +10,6 @@ class Routes {
   static Route<dynamic> generateRoutes(RouteSettings settings) {
     // route setting request cases
     switch (settings.name) {
-
       // case; requesting for login
       case RoutesName.login:
         return MaterialPageRoute(
@@ -26,6 +26,10 @@ class Routes {
       case RoutesName.pageLayout:
         return MaterialPageRoute(
             builder: (BuildContext context) => const PageLayout());
+
+      case RoutesName.userGuide:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const UserGuidePage());
 
       // if non of these above cases are met then return this
       default:

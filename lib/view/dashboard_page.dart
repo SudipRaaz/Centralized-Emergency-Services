@@ -1,5 +1,6 @@
+import 'package:ems_project/resource/constants/constant_values.dart';
+import 'package:ems_project/view/service_map_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import '../resource/constants/colors.dart';
 
@@ -47,31 +48,17 @@ class DashboardPage extends StatelessWidget {
                       maxCrossAxisExtent: 200,
                       childAspectRatio: 3 / 3,
                     ),
-                    itemCount: 9,
+                    itemCount: MyContants.servicesTiles.length,
                     itemBuilder: (BuildContext ctx, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / 2.2,
-                          height: 200,
-                          decoration: BoxDecoration(
-                              color: Color.fromARGB(95, 201, 201, 201),
-                              border: Border.all(
-                                color: Colors.red,
-                              ),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(20))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Names"),
-                              ],
-                            ),
-                          ),
-                        ),
+                      return DashboardTile(
+                        onPress: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ServicePage()));
+                        },
+                        index: index,
                       );
                     }),
               ),
@@ -80,5 +67,41 @@ class DashboardPage extends StatelessWidget {
         )
         // bottomNavigationBar: ,
         );
+  }
+}
+
+class DashboardTile extends StatelessWidget {
+  VoidCallback onPress;
+  int index;
+  DashboardTile({super.key, required this.onPress, required this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPress,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width / 2.2,
+          height: 200,
+          decoration: BoxDecoration(
+              color: Color.fromARGB(95, 201, 201, 201),
+              border: Border.all(
+                color: Colors.red,
+              ),
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(MyContants.servicesTiles[index]),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

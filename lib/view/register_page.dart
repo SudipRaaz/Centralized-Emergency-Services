@@ -96,42 +96,6 @@ class _RegisterState extends State<Register> {
                       FocusScope.of(context).requestFocus(_emailFocusNode),
                 ),
               ),
-              // age picker section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Text(
-                      "Age",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    SizedBox(
-                      width: 300,
-                      // age slider picker
-                      child: Slider(
-                        value: _initialAge,
-                        min: 18.0, // min age allowed
-                        max: 60.0, // max age allowed
-                        divisions: 42, // number of divisions allowed
-                        // updating age on slider change
-                        onChanged: (double newValue) {
-                          setState(() {
-                            _initialAge = newValue;
-                          });
-                        },
-                        activeColor: AppColors.button_color,
-                        inactiveColor: Colors.black45,
-                      ),
-                    ),
-                    Text(
-                      _initialAge.toInt().toString(),
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.w500),
-                    )
-                  ],
-                ),
-              ),
               // email textform field
               Padding(
                 padding: const EdgeInsets.all(8.0),

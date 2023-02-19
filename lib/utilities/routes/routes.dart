@@ -5,4 +5,5 @@ class RoutesName {
   static const String register = "register_screen";
   static const String dashboard = "dashboard_screen";
   static const String pageLayout = "layout_screen";
+  static const String userGuide = "UserGuide_screen";
 }

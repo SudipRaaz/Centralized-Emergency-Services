@@ -1,4 +1,5 @@
 import 'package:ems_project/utilities/routes/routes.dart';
+import 'package:ems_project/view/user_guide_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,39 +29,29 @@ class ProfilePage extends StatelessWidget {
               const Text("Name: Sudip Raj Adhikari"),
               addVerticalSpace(60),
               _featureTiles(
-                text: 'Change Password',
-                onPress: () {
-                  print("change password");
-                  ShowDialog().changeMyPassowrd(context, () {});
-                },
-              ),
-              TextButton(
-                onPressed: () => ShowDialog().changeMyPassowrd(context, () {}),
-                child: const Text('Show Dialog'),
-              ),
-              TextButton(
-                onPressed: () => ShowDialog().showFeedbackForm(context, () {}),
-                child: const Text('Feedback'),
-              ),
+                  text: 'Change Password',
+                  onPress: () => ShowDialog().changeMyPassowrd(context, () {})),
               _featureTiles(
                 text: 'Feedback',
                 onPress: () {
-                  return ShowDialog().changeMyPassowrd(context, () {});
+                  return ShowDialog().showFeedbackForm(context, () {});
                 },
               ),
               _featureTiles(
                 text: 'User Guide',
-                onPress: () {},
+                onPress: () {
+                  Navigator.pushNamed(context, RoutesName.userGuide);
+                },
               ),
               _featureTiles(
                 text: 'Report Bug',
-                onPress: () {},
+                onPress: () {
+                  ShowDialog().reportBug(context, () {});
+                },
               ),
               _featureTiles(
                 text: 'Log Out',
-                onPress: () {
-                  Navigator.pushNamed(context, RoutesName.login);
-                },
+                onPress: () {},
               ),
             ],
           ),
@@ -72,7 +63,7 @@ class ProfilePage extends StatelessWidget {
 
 class _featureTiles extends StatelessWidget {
   String text;
-  Function onPress;
+  VoidCallback onPress;
   _featureTiles({required this.text, required this.onPress});
 
   @override
@@ -80,14 +71,14 @@ class _featureTiles extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: InkWell(
-        onTap: () => onPress,
+        onTap: onPress,
         child: ListTile(
           selectedTileColor: Colors.indigo,
           tileColor: Colors.blueAccent,
           selected: true,
           title: Text(
             text,
-            style: TextStyle(fontSize: 22, color: Colors.white),
+            style: const TextStyle(fontSize: 22, color: Colors.white),
           ),
         ),
       ),
