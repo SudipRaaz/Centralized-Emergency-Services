@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../resource/constants/colors.dart';
+
 class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
 
@@ -8,8 +10,9 @@ class HistoryPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("History"),
+        backgroundColor: AppColors.appBar_theme,
       ),
-      body: Container(
+      body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: ListView.separated(
             itemBuilder: (context, index) {

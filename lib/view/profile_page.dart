@@ -3,6 +3,7 @@ import 'package:ems_project/view/user_guide_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../resource/constants/colors.dart';
 import '../resource/constants/sized_box.dart';
 import '../utilities/InfoDisplay/dialogbox.dart';
 
@@ -14,6 +15,7 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
+        backgroundColor: AppColors.appBar_theme,
       ),
       body: ListView(
         children: [

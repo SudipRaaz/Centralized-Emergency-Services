@@ -1,3 +1,5 @@
+import 'package:ems_project/Controller/authentication_base.dart';
+import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:validators/validators.dart';
 
@@ -189,8 +191,13 @@ class _RegisterState extends State<Register> {
                   } else {
                     try {
                       // saving the data onto cloud firestore database
-
-                      // ignore: use_build_context_synchronously
+                      AuthenticationBase auth = Authentication();
+                      auth.createUserWithEmailAndPassword(
+                          context,
+                          _emailController.text,
+                          _passwordController.text,
+                          _nameController.text,
+                          int.parse(_phoneController.text));
                       Navigator.pop(context);
                       // catch any exceptions occured
                     } catch (e) {

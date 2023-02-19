@@ -48,7 +48,7 @@ class DashboardPage extends StatelessWidget {
                       maxCrossAxisExtent: 200,
                       childAspectRatio: 3 / 3,
                     ),
-                    itemCount: MyContants.servicesTiles.length,
+                    itemCount: EmergencyServices.servicesTiles.length,
                     itemBuilder: (BuildContext ctx, index) {
                       return DashboardTile(
                         onPress: () {
@@ -71,9 +71,9 @@ class DashboardPage extends StatelessWidget {
 }
 
 class DashboardTile extends StatelessWidget {
-  VoidCallback onPress;
-  int index;
-  DashboardTile({super.key, required this.onPress, required this.index});
+  final VoidCallback onPress;
+  final int index;
+  const DashboardTile({super.key, required this.onPress, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -82,8 +82,8 @@ class DashboardTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Container(
-          width: MediaQuery.of(context).size.width / 2.2,
-          height: 200,
+          // width: MediaQuery.of(context).size.width / 2.2,s
+          // height: 200,
           decoration: BoxDecoration(
               color: Color.fromARGB(95, 201, 201, 201),
               border: Border.all(
@@ -96,7 +96,7 @@ class DashboardTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(MyContants.servicesTiles[index]),
+                Text(EmergencyServices.servicesTiles[index]),
               ],
             ),
           ),
