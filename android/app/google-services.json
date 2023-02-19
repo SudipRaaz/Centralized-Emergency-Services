@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "643718106978",
+    "project_id": "centralized-emergency-services",
+    "storage_bucket": "centralized-emergency-services.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643718106978:android:b3e3f1c69fc695128c263b",
+        "android_client_info": {
+          "package_name": "com.example.ambulance_dashboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643718106978-jd3aj5ufp3sapterrl83a051he8ft0k0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIab4LTwheK3Q-xQy8qto_1XD1AlJypu8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643718106978-jd3aj5ufp3sapterrl83a051he8ft0k0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "643718106978-5ae2ijh32p189bs5oe4q46brbevpriob.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ambulanceDashboard"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643718106978:android:5b46e094c0b18cd48c263b",
+        "android_client_info": {
+          "package_name": "com.example.ems_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643718106978-jd3aj5ufp3sapterrl83a051he8ft0k0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIab4LTwheK3Q-xQy8qto_1XD1AlJypu8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643718106978-jd3aj5ufp3sapterrl83a051he8ft0k0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "643718106978-5ae2ijh32p189bs5oe4q46brbevpriob.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ambulanceDashboard"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
