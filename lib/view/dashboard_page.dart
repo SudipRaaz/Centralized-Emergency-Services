@@ -1,3 +1,5 @@
+import 'package:ems_project/Controller/authentication_base.dart';
+import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:ems_project/resource/constants/constant_values.dart';
 import 'package:ems_project/view/service_map_page.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +15,27 @@ class DashboardPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Centralized Emergency Services '),
           backgroundColor: AppColors.appBar_theme,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  AuthenticationBase auth = Authentication();
+                  auth.signOut();
+                },
+                style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    backgroundColor: AppColors.button_color,
+                    foregroundColor: AppColors.blackColor),
+                child: const Text('log Out'),
+              ),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
+              SizedBox(
                 height: 100,
                 child: Padding(
                   padding:
@@ -29,19 +46,20 @@ class DashboardPage extends StatelessWidget {
                       const Text("Panic Mode "),
                       ElevatedButton(
                         onPressed: () {},
-                        child: Text('Enable'),
                         style: ElevatedButton.styleFrom(
                             shape: const StadiumBorder(),
                             backgroundColor: AppColors.button_color,
                             foregroundColor: AppColors.blackColor),
-                      )
+                        child: const Text('Enable'),
+                      ),
                     ],
                   ),
                 ),
               ),
+
               // tile lists
               SizedBox(
-                height: 450,
+                height: 350,
                 child: GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -56,7 +74,7 @@ class DashboardPage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      ServicePage()));
+                                      const ServicePage()));
                         },
                         index: index,
                       );
@@ -64,9 +82,7 @@ class DashboardPage extends StatelessWidget {
               ),
             ],
           ),
-        )
-        // bottomNavigationBar: ,
-        );
+        ));
   }
 }
 

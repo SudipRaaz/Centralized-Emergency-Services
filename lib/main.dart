@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         // initial routing to splash screen
-        initialRoute: RoutesName.login,
+        initialRoute: RoutesName.splashScreen,
         // path to generating routes
         onGenerateRoute: Routes.generateRoutes,
       ),

@@ -31,21 +31,40 @@ class Authentication extends AuthenticationBase {
   }
 
   @override
-  passwordReset(BuildContext context, String email) {
-    // TODO: implement passwordReset
-    throw UnimplementedError();
-  }
-
-  @override
   Future signInWithEmailAndPassword(
-      BuildContext context, String email, String password) {
-    // TODO: implement signInWithEmailAndPassword
-    throw UnimplementedError();
+      context, String email, String password) async {
+    try {
+      // sign in with email and password from firebase auth
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+      // catch exceptios from firebase and display it to the users
+    } on FirebaseAuthException catch (error) {
+      Message.flutterToast(context, error.message.toString());
+      // catch any exceptions occured and display
+    } catch (error) {
+      Message.flushBarErrorMessage(context, '$error');
+    }
   }
 
   @override
-  Future signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  // sign out from current auth account
+  Future signOut() async {
+    await _firebaseAuth.signOut();
+  }
+
+  @override
+  passwordReset(BuildContext context, String email) async {
+    try {
+      // request for forget password and send password reset mail to user's mailbox
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      // ignore: use_build_context_synchronously
+      Message.flutterToast(context, "Check your Mail Box (Spam)");
+      // catch exception from firebase
+    } on FirebaseAuthException catch (e) {
+      Message.flutterToast(context, e.message.toString());
+      // catch any exception
+    } catch (error) {
+      Message.flutterToast(context, error.toString());
+    }
   }
 }

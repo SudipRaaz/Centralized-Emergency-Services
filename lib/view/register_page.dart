@@ -157,8 +157,8 @@ class _RegisterState extends State<Register> {
                   const Text('Agree to'),
                   TextButton(
                       onPressed: () {
-                        // Navigator.pushNamed(
-                        //     context, RoutesName.termsAndCondition);
+                        Navigator.pushNamed(
+                            context, RoutesName.termsAndConditions);
                       },
                       child: const Text('Term and Conditions'))
                 ],

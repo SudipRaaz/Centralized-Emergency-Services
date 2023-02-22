@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ems_project/Controller/cloud_firestore_base.dart';
-
 import '../model/registration_model.dart';
 
 class MyCloudStore extends MyCloudStoreBase {

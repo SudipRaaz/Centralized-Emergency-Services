@@ -37,13 +37,15 @@ dependencies:
   another_flushbar: ^1.12.29  # message carrier
   provider: ^6.0.5 #state management
   rating_dialog: ^2.0.4 #rating dialog box
+  # Map
   google_maps_flutter: ^2.2.3 #google map
+  flutter_polyline_points: ^1.0.0 # draw lines on map
+  location: ^4.4.0 # real time location
 
   #database
   firebase_core: ^2.6.1 # core connection to firebase 
   cloud_firestore: ^4.4.2 # cloud storage for data
   firebase_auth: ^4.2.8 # authentication
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -72,8 +74,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -6,4 +6,7 @@ class RoutesName {
   static const String dashboard = "dashboard_screen";
   static const String pageLayout = "layout_screen";
   static const String userGuide = "UserGuide_screen";
+  static const String termsAndConditions = "terms and condition screen";
+  static const String splashScreen =
+      "diversion_screen"; // to choose either login or dashboard page
 }

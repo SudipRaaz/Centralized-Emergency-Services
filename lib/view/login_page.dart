@@ -1,4 +1,5 @@
-import 'package:ems_project/page_layout.dart';
+import 'package:ems_project/Controller/authentication_base.dart';
+import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:validators/validators.dart';
 
@@ -54,13 +55,12 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.only(top: 20.0, bottom: 30),
               // app logo decoration
               child: Container(
-                width: width * .7,
-                height: height * .3,
-                color: Colors.amber,
-                // decoration: const BoxDecoration(
-                //     image: DecorationImage(
-                //         image: AssetImage('assets/app_logo.png')))
-              ),
+                  width: width * .7,
+                  height: height * .3,
+                  // color: Colors.amber,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/images/logo.jpg')))),
             ),
             // decorating email text field
             Padding(
@@ -117,12 +117,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         // unfocusing the pointer
                         FocusManager.instance.primaryFocus!.unfocus();
-                        // checking for valid email formating
 
+                        // checking for valid email formating
                         if (_emailController.text.isEmpty ||
                             isEmail(_emailController.text)) {
                           try {
                             // reset mail
+                            AuthenticationBase auth = Authentication();
+                            auth.passwordReset(
+                                context, _emailController.text.trim());
+                            debugPrint(
+                                "email : ${_emailController.text.trim()}");
+                            // Message.flutterToast(
+                            //     context, "Please Check your Mail box");
                           } catch (e) {
                             // show exception message
                             Message.flutterToast(context, e.toString());
@@ -137,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            // 9% gap space occupied
+            // gap space occupied
             SizedBox(
               height: height * .04,
             ),
@@ -145,28 +152,24 @@ class _LoginScreenState extends State<LoginScreen> {
             Buttons(
               text: "Login",
               onPress: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => const PageLayout()));
-                // // unfocus active pointer
-                // FocusManager.instance.primaryFocus!.unfocus();
-                // // checking for valid email
-                // if (_emailController.text.isEmpty ||
-                //     !isEmail(_emailController.text)) {
-                //   Message.flushBarErrorMessage(
-                //       context, "Enter a valid Email address");
+                if (_emailController.text.isEmpty ||
+                    !isEmail(_emailController.text)) {
+                  Message.flushBarErrorMessage(
+                      context, "Enter a valid Email address");
 
-                //   // log("enter email", name: "email empty");
-                //   // checking for valid password
-                // } else if (_passwordController.text.length < 6) {
-                //   Message.flushBarErrorMessage(
-                //       context, "Password must be at least 6 digits");
-                // } else {
-                //   // sign in using email and password
-                //   // requesting to method of auth class
-                //   // Navigator.pushNamed(context, RoutesName.dashboard);
-                // }
+                  // checking for valid password
+                } else if (_passwordController.text.length < 6) {
+                  Message.flushBarErrorMessage(
+                      context, "Password must be at least 6 digits");
+                } else {
+                  // sign in using email and password
+                  // requesting to method of auth class
+                  AuthenticationBase auth = Authentication();
+                  auth.signInWithEmailAndPassword(
+                      context,
+                      _emailController.text.trim(),
+                      _passwordController.text.trim());
+                }
               },
             ),
 

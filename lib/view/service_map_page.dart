@@ -1,3 +1,4 @@
+import 'package:ems_project/resource/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -10,7 +11,7 @@ class ServicePage extends StatefulWidget {
 
 class _ServicePageState extends State<ServicePage> {
   GoogleMapController? _controller;
-  List<Marker> _markers = [];
+  final List<Marker> _markers = [];
 
   @override
   void initState() {
@@ -19,9 +20,9 @@ class _ServicePageState extends State<ServicePage> {
     // Add markers for vehicles to the list of markers
     _markers.add(
       Marker(
-        markerId: MarkerId('vehicle1'),
-        position: LatLng(37.4219999, -122.0840575),
-        infoWindow: InfoWindow(
+        markerId: const MarkerId('vehicle1'),
+        position: const LatLng(37.4219999, -122.0840575),
+        infoWindow: const InfoWindow(
           title: 'Vehicle 1',
           snippet: 'Vehicle Type: Sedan',
         ),
@@ -50,13 +51,14 @@ class _ServicePageState extends State<ServicePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Uber Clone'),
+        title: Text('Ambulance Services'),
+        backgroundColor: AppColors.appBar_theme,
       ),
       body: GoogleMap(
         onMapCreated: (GoogleMapController controller) {
           _controller = controller;
         },
-        initialCameraPosition: CameraPosition(
+        initialCameraPosition: const CameraPosition(
           target: LatLng(37.42796133580664, -122.085749655962),
           zoom: 14.0,
         ),
