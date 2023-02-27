@@ -11,6 +11,10 @@ class DashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // setting available height and width
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Centralized Emergency Services '),
@@ -59,7 +63,8 @@ class DashboardPage extends StatelessWidget {
 
               // tile lists
               SizedBox(
-                height: 350,
+                height: height,
+                width: width,
                 child: GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(

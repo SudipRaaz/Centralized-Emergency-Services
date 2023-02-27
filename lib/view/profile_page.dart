@@ -1,8 +1,5 @@
 import 'package:ems_project/utilities/routes/routes.dart';
-import 'package:ems_project/view/user_guide_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../resource/constants/colors.dart';
 import '../resource/constants/sized_box.dart';
 import '../utilities/InfoDisplay/dialogbox.dart';

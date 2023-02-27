@@ -21,7 +21,7 @@ class _ServicePageState extends State<ServicePage> {
     _markers.add(
       Marker(
         markerId: const MarkerId('vehicle1'),
-        position: const LatLng(37.4219999, -122.0840575),
+        position: const LatLng(27.689875, 85.319178),
         infoWindow: const InfoWindow(
           title: 'Vehicle 1',
           snippet: 'Vehicle Type: Sedan',
@@ -34,9 +34,9 @@ class _ServicePageState extends State<ServicePage> {
 
     _markers.add(
       Marker(
-        markerId: MarkerId('vehicle2'),
-        position: LatLng(37.4629101, -122.2449094),
-        infoWindow: InfoWindow(
+        markerId: const MarkerId('vehicle2'),
+        position: const LatLng(27.694258, 85.311030),
+        infoWindow: const InfoWindow(
           title: 'Vehicle 2',
           snippet: 'Vehicle Type: SUV',
         ),
@@ -51,7 +51,7 @@ class _ServicePageState extends State<ServicePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ambulance Services'),
+        title: const Text('Ambulance Services'),
         backgroundColor: AppColors.appBar_theme,
       ),
       body: GoogleMap(
@@ -59,7 +59,7 @@ class _ServicePageState extends State<ServicePage> {
           _controller = controller;
         },
         initialCameraPosition: const CameraPosition(
-          target: LatLng(37.42796133580664, -122.085749655962),
+          target: LatLng(27.689875, 85.319178),
           zoom: 14.0,
         ),
         markers: Set.from(_markers),
