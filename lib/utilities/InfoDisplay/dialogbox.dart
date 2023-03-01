@@ -1,4 +1,5 @@
 import 'package:ems_project/resource/constants/sized_box.dart';
+import 'package:ems_project/resource/constants/style.dart';
 import 'package:flutter/material.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 
@@ -33,6 +34,158 @@ class ShowDialog {
     );
   }
 
+  // request service dialog box
+  void requestService(BuildContext context, Function onPress) async {
+    TextEditingController requestService = TextEditingController();
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Request Service'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                addVerticalSpace(15),
+                const Text('Additional Message (Optional)'),
+                addVerticalSpace(15),
+                TextField(
+                  controller: requestService,
+                  decoration:
+                      const InputDecoration(border: OutlineInputBorder()),
+                )
+              ],
+            ),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  style: MyStyle().elevatedButtonSecondary,
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    onPress;
+                  },
+                ),
+                addHorizontalSpace(10),
+                ElevatedButton(
+                  style: MyStyle().elevatedButtonPrimary,
+                  child: Text('Confirm Request'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    onPress;
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> showInformationDialog(BuildContext context) async {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    TextEditingController requestServiceTextController =
+        TextEditingController();
+    bool checkAmbulance = false;
+    bool checkFireBrigade = false;
+    bool checkPolice = false;
+
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          // for stateful layout builder
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Request Multiple Service'),
+              content: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Checkbox(
+                              value: checkAmbulance,
+                              onChanged: ((value) {
+                                setState(() {
+                                  checkAmbulance = !checkAmbulance;
+                                });
+                              })),
+                          const Text('Ambulance'),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Checkbox(
+                              value: checkFireBrigade,
+                              onChanged: ((value) {
+                                setState(() {
+                                  checkFireBrigade = !checkFireBrigade;
+                                });
+                              })),
+                          const Text('Fire Brigade'),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Checkbox(
+                              value: checkPolice,
+                              onChanged: ((value) {
+                                setState(() {
+                                  checkPolice = !checkPolice;
+                                });
+                              })),
+                          const Text('Police'),
+                        ],
+                      ),
+                      addVerticalSpace(15),
+                      TextFormField(
+                        controller: requestServiceTextController,
+                        validator: (value) {
+                          return value!.isNotEmpty ? null : "Invalid Field";
+                        },
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Message (Optional)"),
+                      ),
+                    ],
+                  )),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      style: MyStyle().elevatedButtonSecondary,
+                      child: const Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    addHorizontalSpace(10),
+                    ElevatedButton(
+                      style: MyStyle().elevatedButtonPrimary,
+                      child: const Text('Confirm Request'),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          // Do something like updating SharedPreferences or User Settings etc.
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            );
+          });
+        });
+  }
+
+  // report bug dialog box
   void reportBug(BuildContext context, Function onPress) async {
     TextEditingController reportBug = TextEditingController();
 
@@ -71,7 +224,8 @@ class ShowDialog {
           ),
           actions: <Widget>[
             ElevatedButton(
-              child: Text('Submit'),
+              style: MyStyle().elevatedButtonPrimary,
+              child: const Text('Submit'),
               onPressed: () {
                 Navigator.of(context).pop();
                 onPress;
@@ -83,6 +237,7 @@ class ShowDialog {
     );
   }
 
+  // feedback form dialog
   void showFeedbackForm(BuildContext context, Function onPress) async {
     return showDialog<void>(
       context: context,

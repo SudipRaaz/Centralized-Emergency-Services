@@ -1,13 +1,26 @@
 import 'package:ems_project/Controller/authentication_base.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:ems_project/resource/constants/constant_values.dart';
-import 'package:ems_project/view/service_map_page.dart';
+import 'package:ems_project/utilities/InfoDisplay/dialogbox.dart';
 import 'package:flutter/material.dart';
 
 import '../resource/constants/colors.dart';
+import '../resource/constants/sized_box.dart';
+import '../resource/constants/style.dart';
+import '../utilities/InfoDisplay/multipleRequest.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  TextEditingController requestService = TextEditingController();
+  bool checkAmbulance = false;
+  bool checkFireBrigade = false;
+  bool checkPolice = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +88,13 @@ class DashboardPage extends StatelessWidget {
                     itemBuilder: (BuildContext ctx, index) {
                       return DashboardTile(
                         onPress: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const ServicePage()));
+                          setState(() {
+                            if (index == 3) {
+                              ShowDialog().showInformationDialog(context);
+                            } else {
+                              ShowDialog().requestService(context, () {});
+                            }
+                          });
                         },
                         index: index,
                       );
@@ -103,10 +118,8 @@ class DashboardTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Container(
-          // width: MediaQuery.of(context).size.width / 2.2,s
-          // height: 200,
           decoration: BoxDecoration(
-              color: Color.fromARGB(95, 201, 201, 201),
+              color: const Color.fromARGB(95, 201, 201, 201),
               border: Border.all(
                 color: Colors.red,
               ),

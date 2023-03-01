@@ -28,9 +28,6 @@ class ProfilePage extends StatelessWidget {
               const Text("Name: Sudip Raj Adhikari"),
               addVerticalSpace(60),
               _featureTiles(
-                  text: 'Change Password',
-                  onPress: () => ShowDialog().changeMyPassowrd(context, () {})),
-              _featureTiles(
                 text: 'Feedback',
                 onPress: () {
                   return ShowDialog().showFeedbackForm(context, () {});

@@ -41,6 +41,7 @@ dependencies:
   google_maps_flutter: ^2.2.3 #google map
   flutter_polyline_points: ^1.0.0 # draw lines on map
   location: ^4.4.0 # real time location
+  url_launcher: ^6.1.10 #
 
   #database
   firebase_core: ^2.6.1 # core connection to firebase 
