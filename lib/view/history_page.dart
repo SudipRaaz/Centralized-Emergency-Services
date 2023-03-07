@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ems_project/Controller/authentication_functions.dart';
+import 'package:ems_project/model/request_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../resource/constants/colors.dart';
 
@@ -7,44 +11,131 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("History"),
-        backgroundColor: AppColors.appBar_theme,
-      ),
-      body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: ListView.separated(
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(12),
-                child: Container(
-                  // height: 300,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          " Case ID: \n Date:                  Time: \n Requeseted Service : \n Message : \n Response Message : ",
-                          style: TextStyle(fontSize: 18),
+    final uid = Authentication().currentUser!.uid;
+    final Stream<QuerySnapshot> _userHistory = FirebaseFirestore.instance
+        .collection('Customer')
+        .doc('Requests')
+        .collection(uid)
+        .snapshots();
+
+    var documentID = FirebaseFirestore.instance
+        .collection('Customer')
+        .doc('Requests')
+        .collection(uid)
+        .doc();
+
+    // list
+    List historyDocs;
+    // List docRef;
+
+    // var docsnap;
+
+    // getID() async {
+    //   docsnap = await documentID.get();
+    // }
+
+    // ;
+
+    return StreamBuilder(
+        stream: _userHistory,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+
+          //clearing the productsDocs list
+          historyDocs = [];
+
+          snapshot.data!.docs.map((DocumentSnapshot document) {
+            Map historyData = document.data() as Map<String, dynamic>;
+            historyDocs.add(historyData);
+          }).toList();
+
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text("History"),
+              backgroundColor: AppColors.appBar_theme,
+            ),
+            body: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    // formating timestamp from firebase data
+                    Timestamp timestamp = historyDocs[index]['requestedAt'];
+                    DateTime dateTime = timestamp.toDate();
+                    var requestService = '';
+                    var serviceAlloted = '';
+                    if (historyDocs[index]['ambulanceService']) {
+                      requestService = '\n      Ambulance Service';
+                    }
+                    if (historyDocs[index]['fireBrigadeService']) {
+                      requestService =
+                          '$requestService\n      Fire Brigade Service';
+                    }
+                    if (historyDocs[index]['policeService']) {
+                      requestService = '$requestService\n      Police Service';
+                    }
+
+                    // checking for service alloted
+                    if (historyDocs[index]['ambulanceServiceAlloted']) {
+                      serviceAlloted = '\n      Ambulance Service Alloted';
+                    }
+                    if (historyDocs[index]['fireBrigadeServiceAlloted']) {
+                      serviceAlloted =
+                          '$serviceAlloted\n       Fire Brigade Service Alloted';
+                    }
+                    if (historyDocs[index]['policeServiceAlloted']) {
+                      serviceAlloted =
+                          '$serviceAlloted\n       Police Service Alloted';
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '''
+Case ID: ${historyDocs[index]['Status']}
+Date: ${dateTime.year}/${dateTime.month}/${dateTime.day}        Time: ${dateTime.hour}:${dateTime.minute}:${dateTime.second} 
+Requeseted Service :  $requestService
+Message : ${historyDocs[index]['message']}
+Response
+$serviceAlloted
+''',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-            itemCount: 5,
-            separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(
-                height: 8,
-              );
-            },
-          )),
-    );
+                      ),
+                    );
+                  },
+                  itemCount: historyDocs.length,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(
+                      height: 8,
+                    );
+                  },
+                )),
+          );
+
+          // ************************************************************************************************
+          //     ListTile(
+          //       title: Text(data['Status']),
+          //       subtitle: Text(data?['allotedAt']),
+          //     );
+          //   }).toList(),
+          // );
+        });
   }
 }

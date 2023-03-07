@@ -1,13 +1,14 @@
+import 'dart:developer';
+
 import 'package:ems_project/Controller/authentication_base.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:ems_project/resource/constants/constant_values.dart';
 import 'package:ems_project/utilities/InfoDisplay/dialogbox.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../resource/constants/colors.dart';
-import '../resource/constants/sized_box.dart';
-import '../resource/constants/style.dart';
-import '../utilities/InfoDisplay/multipleRequest.dart';
+import '../utilities/InfoDisplay/message.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
@@ -21,6 +22,56 @@ class _DashboardPageState extends State<DashboardPage> {
   bool checkAmbulance = false;
   bool checkFireBrigade = false;
   bool checkPolice = false;
+  double latitude = 0;
+  double longitude = 0;
+
+  // var locationMessage;
+
+  Future<Position?> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    var position;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() {
+        latitude = position.latitude;
+        longitude = position.longitude;
+      });
+      log('position:  : ${position.accuracy}');
+    });
+    return position;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +124,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ),
               ),
-
+              Text("$latitude   $longitude"),
               // tile lists
               SizedBox(
                 height: height,
@@ -85,16 +136,36 @@ class _DashboardPageState extends State<DashboardPage> {
                       childAspectRatio: 3 / 3,
                     ),
                     itemCount: EmergencyServices.servicesTiles.length,
-                    itemBuilder: (BuildContext ctx, index) {
+                    itemBuilder: (BuildContext context, index) {
                       return DashboardTile(
                         onPress: () {
-                          setState(() {
-                            if (index == 3) {
-                              ShowDialog().showInformationDialog(context);
-                            } else {
-                              ShowDialog().requestService(context, () {});
-                            }
-                          });
+                          _determinePosition();
+                          switch (index) {
+                            case 0:
+                              // ambulance
+                              ShowDialog().requestService(context, () {},
+                                  "Ambulance", latitude, longitude);
+                              break;
+                            // fire brigade
+                            case 1:
+                              ShowDialog().requestService(context, () {},
+                                  "Fire Brigade", latitude, longitude);
+                              break;
+                            // police
+                            case 2:
+                              ShowDialog().requestService(context, () {},
+                                  "Police", latitude, longitude);
+                              break;
+                            // Multiple service requests
+                            case 3:
+                              ShowDialog().requestMultipleService(
+                                  context, latitude, longitude);
+                              break;
+                            default:
+                              Message.flushBarErrorMessage(
+                                  context, "Service index is out of range");
+                              break;
+                          }
                         },
                         index: index,
                       );
@@ -119,10 +190,15 @@ class DashboardTile extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Container(
           decoration: BoxDecoration(
-              color: const Color.fromARGB(95, 201, 201, 201),
+              color: Color.fromARGB(255, 255, 255, 255),
               border: Border.all(
-                color: Colors.red,
-              ),
+                  color: Color.fromARGB(255, 54, 111, 244), width: 4),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey, //New
+                    blurRadius: 22.0,
+                    offset: Offset(10, 5))
+              ],
               borderRadius: const BorderRadius.all(Radius.circular(20))),
           child: Padding(
             padding: const EdgeInsets.all(15.0),

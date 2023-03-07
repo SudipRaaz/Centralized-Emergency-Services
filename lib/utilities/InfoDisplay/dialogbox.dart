@@ -1,11 +1,17 @@
+import 'dart:developer';
+
+import 'package:ems_project/Controller/cloud_firestore.dart';
+import 'package:ems_project/Controller/cloud_firestore_base.dart';
 import 'package:ems_project/resource/constants/sized_box.dart';
 import 'package:ems_project/resource/constants/style.dart';
 import 'package:flutter/material.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 
+import '../../Controller/authentication_functions.dart';
+
 class ShowDialog {
   void changeMyPassowrd(BuildContext context, Function onPress) async {
-    return showDialog<void>(
+    return showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
@@ -22,10 +28,9 @@ class ShowDialog {
           ),
           actions: <Widget>[
             ElevatedButton(
-              child: Text('Okay'),
+              child: const Text('Okay'),
               onPressed: () {
                 Navigator.of(context).pop();
-                onPress;
               },
             ),
           ],
@@ -35,15 +40,19 @@ class ShowDialog {
   }
 
   // request service dialog box
-  void requestService(BuildContext context, Function onPress) async {
+  void requestService(BuildContext context, Function onPress, String category,
+      double lat, double lng) async {
     TextEditingController requestService = TextEditingController();
-
-    return showDialog<void>(
+    bool ambulance = false;
+    bool fireBrigade = false;
+    bool police = false;
+    double latitude = lat;
+    double longitude = lng;
+    return showDialog(
       context: context,
-      barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Request Service'),
+          title: Text('$category Service'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -54,7 +63,7 @@ class ShowDialog {
                   controller: requestService,
                   decoration:
                       const InputDecoration(border: OutlineInputBorder()),
-                )
+                ),
               ],
             ),
           ),
@@ -64,7 +73,7 @@ class ShowDialog {
               children: [
                 ElevatedButton(
                   style: MyStyle().elevatedButtonSecondary,
-                  child: Text('Cancel'),
+                  child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop();
                     onPress;
@@ -73,10 +82,35 @@ class ShowDialog {
                 addHorizontalSpace(10),
                 ElevatedButton(
                   style: MyStyle().elevatedButtonPrimary,
-                  child: Text('Confirm Request'),
+                  child: const Text('Confirm Request'),
                   onPressed: () {
+                    switch (category) {
+                      case 'Ambulance':
+                        ambulance = true;
+                        break;
+                      case 'Fire Brigade':
+                        fireBrigade = true;
+                        break;
+                      case 'Police':
+                        police = true;
+                        break;
+                    }
+                    // current time
+                    DateTime now = DateTime.now();
+                    // object of abstract class
+                    MyCloudStoreBase object = MyCloudStore();
+                    object.requestService(
+                        Authentication().currentUser!.uid,
+                        ambulance,
+                        fireBrigade,
+                        police,
+                        requestService.text.trim(),
+                        latitude,
+                        longitude,
+                        now,
+                        "Waiting");
+                    // dispose widget
                     Navigator.of(context).pop();
-                    onPress;
                   },
                 ),
               ],
@@ -87,7 +121,9 @@ class ShowDialog {
     );
   }
 
-  Future<void> showInformationDialog(BuildContext context) async {
+  // dialog box for requesting multiple services
+  Future<void> requestMultipleService(
+      BuildContext context, double latitude, double longitude) async {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     TextEditingController requestServiceTextController =
         TextEditingController();
@@ -111,11 +147,12 @@ class ShowDialog {
                         children: [
                           Checkbox(
                               value: checkAmbulance,
-                              onChanged: ((value) {
+                              onChanged: (value) {
                                 setState(() {
+                                  log('check ambulance : $checkAmbulance');
                                   checkAmbulance = !checkAmbulance;
                                 });
-                              })),
+                              }),
                           const Text('Ambulance'),
                         ],
                       ),
@@ -172,6 +209,20 @@ class ShowDialog {
                       child: const Text('Confirm Request'),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          // current time
+                          DateTime now = DateTime.now();
+                          // object of abstract class
+                          MyCloudStoreBase object = MyCloudStore();
+                          object.requestService(
+                              Authentication().currentUser!.uid,
+                              checkAmbulance,
+                              checkFireBrigade,
+                              checkPolice,
+                              requestServiceTextController.text.trim(),
+                              latitude,
+                              longitude,
+                              now,
+                              "Waiting");
                           // Do something like updating SharedPreferences or User Settings etc.
                           Navigator.of(context).pop();
                         }
@@ -227,8 +278,9 @@ class ShowDialog {
               style: MyStyle().elevatedButtonPrimary,
               child: const Text('Submit'),
               onPressed: () {
+                MyCloudStoreBase objectStore = MyCloudStore();
+                objectStore.submitFeedback(null, null, reportBug.text);
                 Navigator.of(context).pop();
-                onPress;
               },
             ),
           ],
@@ -267,7 +319,9 @@ class ShowDialog {
           onCancelled: () => print('cancelled'),
           onSubmitted: (response) {
             print('rating: ${response.rating}, comment: ${response.comment}');
-
+            MyCloudStoreBase object = MyCloudStore();
+            object.submitFeedback(
+                response.rating.toInt(), response.comment, null);
             // TODO: add your own logic
             if (response.rating < 3.0) {
               // send their comments to your email or anywhere you wish
