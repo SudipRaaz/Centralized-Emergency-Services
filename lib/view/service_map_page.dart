@@ -1,5 +1,7 @@
 import 'package:ems_project/resource/constants/colors.dart';
+import 'package:ems_project/resource/constants/constant_values.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ServicePage extends StatefulWidget {
@@ -13,6 +15,10 @@ class _ServicePageState extends State<ServicePage> {
   GoogleMapController? _controller;
   final List<Marker> _markers = [];
 
+  // locations
+  LatLng sourceLocation = LatLng(27.6772194524, 85.3168201447);
+  LatLng destinationLocation = LatLng(27.6841741279, 85.3193950653);
+
   @override
   void initState() {
     super.initState();
@@ -20,8 +26,8 @@ class _ServicePageState extends State<ServicePage> {
     // Add markers for vehicles to the list of markers
     _markers.add(
       Marker(
-        markerId: const MarkerId('vehicle1'),
-        position: const LatLng(27.689875, 85.319178),
+        markerId: const MarkerId('Source'),
+        position: sourceLocation,
         infoWindow: const InfoWindow(
           title: 'Vehicle 1',
           snippet: 'Vehicle Type: Sedan',
@@ -34,8 +40,8 @@ class _ServicePageState extends State<ServicePage> {
 
     _markers.add(
       Marker(
-        markerId: const MarkerId('vehicle2'),
-        position: const LatLng(27.694258, 85.311030),
+        markerId: const MarkerId('Destination'),
+        position: destinationLocation,
         infoWindow: const InfoWindow(
           title: 'Vehicle 2',
           snippet: 'Vehicle Type: SUV',
@@ -45,6 +51,34 @@ class _ServicePageState extends State<ServicePage> {
         },
       ),
     );
+    getPolyPoints();
+  }
+
+  Map<PolylineId, Polyline> polylinesMap = {};
+  List<LatLng> polyLineCoordinates = [];
+
+  void getPolyPoints() async {
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        EmergencyServices.apivalue,
+        PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
+        PointLatLng(
+            destinationLocation.latitude, destinationLocation.longitude));
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((point) {
+        polyLineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+      _addPolyLine();
+    }
+  }
+
+  _addPolyLine() {
+    PolylineId id = PolylineId("poly");
+    Polyline polyline = Polyline(
+        polylineId: id, color: Colors.red, points: polyLineCoordinates);
+    polylinesMap[id] = polyline;
+    setState(() {});
   }
 
   @override
@@ -58,6 +92,7 @@ class _ServicePageState extends State<ServicePage> {
         onMapCreated: (GoogleMapController controller) {
           _controller = controller;
         },
+        polylines: Set<Polyline>.of(polylinesMap.values),
         initialCameraPosition: const CameraPosition(
           target: LatLng(27.689875, 85.319178),
           zoom: 14.0,

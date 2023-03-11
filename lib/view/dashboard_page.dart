@@ -5,10 +5,9 @@ import 'package:ems_project/Controller/authentication_base.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:ems_project/resource/constants/constant_values.dart';
 import 'package:ems_project/utilities/InfoDisplay/dialogbox.dart';
+import 'package:ems_project/view/service_map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-
-import '../Controller/cloud_firestore_base.dart';
 import '../resource/constants/colors.dart';
 import '../utilities/InfoDisplay/message.dart';
 
@@ -147,6 +146,19 @@ class _DashboardPageState extends State<DashboardPage> {
                                   backgroundColor: AppColors.button_color,
                                   foregroundColor: AppColors.blackColor),
                               child: const Text('Enable'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                  return ServicePage();
+                                }));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  shape: const StadiumBorder(),
+                                  backgroundColor: AppColors.button_color,
+                                  foregroundColor: AppColors.blackColor),
+                              child: const Text('Map'),
                             ),
                           ],
                         ),

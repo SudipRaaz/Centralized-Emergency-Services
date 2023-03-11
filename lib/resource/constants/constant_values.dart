@@ -6,4 +6,6 @@ class EmergencyServices {
     "Police",
     "Multiple \nService",
   ];
+
+  static String apivalue = "AIzaSyBVMT5m7mO6dv8uwRrpzBlUS_JEFDHkxuw";
 }
