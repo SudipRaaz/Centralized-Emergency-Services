@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RequestModel {
   // user ID
-  String? uid;
+  String uid;
+  String name;
+  String phoneNumber;
   // requested service
   bool ambulanceService;
   bool fireBrigadeService;
@@ -23,12 +25,15 @@ class RequestModel {
   bool ambulanceServiceAlloted;
   bool fireBrigadeServiceAlloted;
   bool policeServiceAlloted;
+  String? responseMessage;
   String? status;
 
   RequestModel(
       {
       // user ID
-      this.uid,
+      required this.uid,
+      required this.name,
+      required this.phoneNumber,
       // requested service
       required this.ambulanceService,
       required this.fireBrigadeService,
@@ -49,11 +54,15 @@ class RequestModel {
       this.ambulanceServiceAlloted = false,
       this.fireBrigadeServiceAlloted = false,
       this.policeServiceAlloted = false,
+      // message
+      this.responseMessage,
       this.status});
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
     return RequestModel(
         uid: json["uid"] as String,
+        name: json["name"] as String,
+        phoneNumber: json["phoneNumber"] as String,
         ambulanceService: json["ambulanceService"],
         fireBrigadeService: json["fireBrigadeService"],
         policeService: json["policeService"],
@@ -68,11 +77,14 @@ class RequestModel {
         ambulanceServiceAlloted: json["ambulanceServiceAlloted"],
         fireBrigadeServiceAlloted: json["fireBrigadeServiceAlloted"],
         policeServiceAlloted: json["policeServiceAlloted"],
+        responseMessage: json["responseMessage"],
         status: json["Status"] as String);
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'uid': uid,
+        'name': name,
+        'phoneNumber': phoneNumber,
         'ambulanceService': ambulanceService,
         'fireBrigadeService': fireBrigadeService,
         'policeService': policeService,
@@ -87,6 +99,7 @@ class RequestModel {
         'ambulanceServiceAlloted': ambulanceServiceAlloted,
         'fireBrigadeServiceAlloted': fireBrigadeServiceAlloted,
         'policeServiceAlloted': policeServiceAlloted,
+        'responseMessage': responseMessage,
         'Status': status
       };
 

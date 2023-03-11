@@ -13,16 +13,10 @@ class HistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final uid = Authentication().currentUser!.uid;
     final Stream<QuerySnapshot> _userHistory = FirebaseFirestore.instance
-        .collection('Customer')
+        .collection('CustomerRequests')
         .doc('Requests')
         .collection(uid)
         .snapshots();
-
-    var documentID = FirebaseFirestore.instance
-        .collection('Customer')
-        .doc('Requests')
-        .collection(uid)
-        .doc();
 
     // list
     List historyDocs;
@@ -40,10 +34,10 @@ class HistoryPage extends StatelessWidget {
         stream: _userHistory,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
-            return Text('Something went wrong');
+            return Center(child: Text('Something went wrong'));
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
+            return Center(child: Text("Loading"));
           }
 
           //clearing the productsDocs list

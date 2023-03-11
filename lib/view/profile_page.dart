@@ -32,10 +32,7 @@ class ProfilePage extends StatelessWidget {
           userDocs = [];
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
-          // snapshot.data!.docs.map((DocumentSnapshot document) {
-          //   Map userData = document.data() as Map<String, String>;
-          //   userDocs.add(userData);
-          // }).toList();
+
           return Scaffold(
             appBar: AppBar(
               title: const Text('Profile'),

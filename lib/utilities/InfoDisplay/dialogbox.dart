@@ -41,7 +41,7 @@ class ShowDialog {
 
   // request service dialog box
   void requestService(BuildContext context, Function onPress, String category,
-      double lat, double lng) async {
+      String name, String phoneNumber, double lat, double lng) async {
     TextEditingController requestService = TextEditingController();
     bool ambulance = false;
     bool fireBrigade = false;
@@ -101,6 +101,8 @@ class ShowDialog {
                     MyCloudStoreBase object = MyCloudStore();
                     object.requestService(
                         Authentication().currentUser!.uid,
+                        name,
+                        phoneNumber,
                         ambulance,
                         fireBrigade,
                         police,
@@ -122,8 +124,8 @@ class ShowDialog {
   }
 
   // dialog box for requesting multiple services
-  Future<void> requestMultipleService(
-      BuildContext context, double latitude, double longitude) async {
+  Future<void> requestMultipleService(BuildContext context, String name,
+      String phoneNumber, double latitude, double longitude) async {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     TextEditingController requestServiceTextController =
         TextEditingController();
@@ -215,6 +217,8 @@ class ShowDialog {
                           MyCloudStoreBase object = MyCloudStore();
                           object.requestService(
                               Authentication().currentUser!.uid,
+                              name,
+                              phoneNumber,
                               checkAmbulance,
                               checkFireBrigade,
                               checkPolice,
@@ -237,7 +241,10 @@ class ShowDialog {
   }
 
   // report bug dialog box
-  void reportBug(BuildContext context, Function onPress) async {
+  void reportBug(
+    BuildContext context,
+    Function onPress,
+  ) async {
     TextEditingController reportBug = TextEditingController();
 
     return showDialog<void>(

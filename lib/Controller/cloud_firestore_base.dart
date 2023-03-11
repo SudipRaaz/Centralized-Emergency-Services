@@ -6,6 +6,8 @@ abstract class MyCloudStoreBase {
 
   Future requestService(
       String uid,
+      String name,
+      String phoneNumber,
       bool ambulance,
       bool fireBrigade,
       bool police,
@@ -15,12 +17,18 @@ abstract class MyCloudStoreBase {
       DateTime timestamp,
       String status);
 
+  // get user history information
   Stream<QuerySnapshot> getHistory(uid) {
     return FirebaseFirestore.instance
         .collection('Customer')
         .doc('Requests')
         .collection(uid)
         .snapshots();
+  }
+
+  // get user information
+  Stream<DocumentSnapshot> getData(uid) {
+    return FirebaseFirestore.instance.collection('Users').doc(uid).snapshots();
   }
 
   Future submitFeedback(int? rating, String? comment, String? report);

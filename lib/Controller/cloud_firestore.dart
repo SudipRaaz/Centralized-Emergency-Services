@@ -21,6 +21,8 @@ class MyCloudStore extends MyCloudStoreBase {
   @override
   Future requestService(
       String uid,
+      String name,
+      String phoneNumber,
       bool ambulance,
       bool fireBrigade,
       bool police,
@@ -35,9 +37,12 @@ class MyCloudStore extends MyCloudStoreBase {
         .doc('Requests')
         .collection(uid)
         .doc();
+
     // model fill
     final request = RequestModel(
         uid: uid,
+        name: name,
+        phoneNumber: phoneNumber,
         ambulanceService: ambulance,
         fireBrigadeService: fireBrigade,
         policeService: police,
@@ -46,6 +51,27 @@ class MyCloudStore extends MyCloudStoreBase {
         longitude: longitude,
         requestedAt: timestamp,
         status: status);
+
+    // ambulance department
+    final ambulanceDepartment =
+        FirebaseFirestore.instance.collection('AmbulanceDepartment').doc();
+    // fire brigade department
+    final fireBrigadeDepartment =
+        FirebaseFirestore.instance.collection('FireBrigadeDepartment').doc();
+    // police department
+    final policeDepartment =
+        FirebaseFirestore.instance.collection('PoliceDepartment').doc();
+
+    // checking for requested department and sending request to each department
+    if (ambulance) {
+      await ambulanceDepartment.set(request.toJson());
+    }
+    if (fireBrigade) {
+      await fireBrigadeDepartment.set(request.toJson());
+    }
+    if (police) {
+      await policeDepartment.set(request.toJson());
+    }
     await docReq.set(request.toJson());
   }
 

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ems_project/Controller/authentication_base.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:ems_project/resource/constants/constant_values.dart';
@@ -7,6 +8,7 @@ import 'package:ems_project/utilities/InfoDisplay/dialogbox.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../Controller/cloud_firestore_base.dart';
 import '../resource/constants/colors.dart';
 import '../utilities/InfoDisplay/message.dart';
 
@@ -24,6 +26,12 @@ class _DashboardPageState extends State<DashboardPage> {
   bool checkPolice = false;
   double latitude = 0;
   double longitude = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition();
+  }
 
   // var locationMessage;
 
@@ -78,102 +86,146 @@ class _DashboardPageState extends State<DashboardPage> {
     // setting available height and width
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final userID = Authentication().currentUser!.uid;
+    final userProfile =
+        FirebaseFirestore.instance.collection('Users').doc(userID).get();
+    List userDocs;
+    return FutureBuilder(
+        future: userProfile,
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("Error: " + snapshot.hasError.toString());
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+          if (snapshot.connectionState == ConnectionState.none) {
+            return Text("Error: " + snapshot.error.toString());
+          }
+          //clearing the productsDocs list
+          userDocs = [];
+          Map<String, dynamic> data =
+              snapshot.data!.data() as Map<String, dynamic>;
 
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Centralized Emergency Services '),
-          backgroundColor: AppColors.appBar_theme,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  AuthenticationBase auth = Authentication();
-                  auth.signOut();
-                },
-                style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                    backgroundColor: AppColors.button_color,
-                    foregroundColor: AppColors.blackColor),
-                child: const Text('log Out'),
-              ),
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 100,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("Panic Mode "),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                            shape: const StadiumBorder(),
-                            backgroundColor: AppColors.button_color,
-                            foregroundColor: AppColors.blackColor),
-                        child: const Text('Enable'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Text("$latitude   $longitude"),
-              // tile lists
-              SizedBox(
-                height: height,
-                width: width,
-                child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 3 / 3,
+          return Scaffold(
+              appBar: AppBar(
+                title: const Text('Centralized Emergency Services '),
+                backgroundColor: AppColors.appBar_theme,
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        AuthenticationBase auth = Authentication();
+                        auth.signOut();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          shape: const StadiumBorder(),
+                          backgroundColor: AppColors.button_color,
+                          foregroundColor: AppColors.blackColor),
+                      child: const Text('log Out'),
                     ),
-                    itemCount: EmergencyServices.servicesTiles.length,
-                    itemBuilder: (BuildContext context, index) {
-                      return DashboardTile(
-                        onPress: () {
-                          _determinePosition();
-                          switch (index) {
-                            case 0:
-                              // ambulance
-                              ShowDialog().requestService(context, () {},
-                                  "Ambulance", latitude, longitude);
-                              break;
-                            // fire brigade
-                            case 1:
-                              ShowDialog().requestService(context, () {},
-                                  "Fire Brigade", latitude, longitude);
-                              break;
-                            // police
-                            case 2:
-                              ShowDialog().requestService(context, () {},
-                                  "Police", latitude, longitude);
-                              break;
-                            // Multiple service requests
-                            case 3:
-                              ShowDialog().requestMultipleService(
-                                  context, latitude, longitude);
-                              break;
-                            default:
-                              Message.flushBarErrorMessage(
-                                  context, "Service index is out of range");
-                              break;
-                          }
-                        },
-                        index: index,
-                      );
-                    }),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ));
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 100,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Panic Mode "),
+                            ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  shape: const StadiumBorder(),
+                                  backgroundColor: AppColors.button_color,
+                                  foregroundColor: AppColors.blackColor),
+                              child: const Text('Enable'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Text(
+                        "$latitude   $longitude, ${data['Name']}, ${data['PhoneNumber']}"),
+                    // tile lists
+                    SizedBox(
+                      height: height,
+                      width: width,
+                      child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 3 / 3,
+                          ),
+                          itemCount: EmergencyServices.servicesTiles.length,
+                          itemBuilder: (BuildContext context, index) {
+                            return DashboardTile(
+                              onPress: () {
+                                _determinePosition();
+                                switch (index) {
+                                  case 0:
+                                    // ambulance
+                                    ShowDialog().requestService(
+                                        context,
+                                        () {},
+                                        "Ambulance",
+                                        data['Name'],
+                                        data['PhoneNumber'].toString(),
+                                        latitude,
+                                        longitude);
+                                    break;
+                                  // fire brigade
+                                  case 1:
+                                    ShowDialog().requestService(
+                                        context,
+                                        () {},
+                                        "Fire Brigade",
+                                        data['Name'],
+                                        data['PhoneNumber'].toString(),
+                                        latitude,
+                                        longitude);
+                                    break;
+                                  // police
+                                  case 2:
+                                    ShowDialog().requestService(
+                                        context,
+                                        () {},
+                                        "Police",
+                                        data['Name'],
+                                        data['PhoneNumber'].toString(),
+                                        latitude,
+                                        longitude);
+                                    break;
+                                  // Multiple service requests
+                                  case 3:
+                                    ShowDialog().requestMultipleService(
+                                        context,
+                                        data['Name'],
+                                        data['PhoneNumber'].toString(),
+                                        latitude,
+                                        longitude);
+                                    break;
+                                  default:
+                                    Message.flushBarErrorMessage(context,
+                                        "Service index is out of range");
+                                    break;
+                                }
+                              },
+                              index: index,
+                            );
+                          }),
+                    ),
+                  ],
+                ),
+              ));
+        });
   }
 }
 
