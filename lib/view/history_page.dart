@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:ems_project/model/request_model.dart';
+import 'package:ems_project/resource/components/buttons.dart';
+import 'package:ems_project/view/google_map.dart';
+import 'package:ems_project/view/service_map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -20,15 +23,6 @@ class HistoryPage extends StatelessWidget {
 
     // list
     List historyDocs;
-    // List docRef;
-
-    // var docsnap;
-
-    // getID() async {
-    //   docsnap = await documentID.get();
-    // }
-
-    // ;
 
     return StreamBuilder(
         stream: _userHistory,
@@ -99,7 +93,8 @@ class HistoryPage extends StatelessWidget {
                             children: [
                               Text(
                                 '''
-Case ID: ${historyDocs[index]['Status']}
+Status :  ${historyDocs[index]['Status']}
+Case ID: 
 Date: ${dateTime.year}/${dateTime.month}/${dateTime.day}        Time: ${dateTime.hour}:${dateTime.minute}:${dateTime.second} 
 Requeseted Service :  $requestService
 Message : ${historyDocs[index]['message']}
@@ -108,6 +103,27 @@ $serviceAlloted
 ''',
                                 style: const TextStyle(fontSize: 18),
                               ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Buttons(
+                                      text: "Track",
+                                      onPress: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    MyMap(
+                                                      userLocation:
+                                                          historyDocs[index]
+                                                              ['userLocation'],
+                                                      caseID: historyDocs[index]
+                                                          ['caseID'],
+                                                    )));
+                                      })
+                                ],
+                              )
                             ],
                           ),
                         ),
@@ -122,14 +138,6 @@ $serviceAlloted
                   },
                 )),
           );
-
-          // ************************************************************************************************
-          //     ListTile(
-          //       title: Text(data['Status']),
-          //       subtitle: Text(data?['allotedAt']),
-          //     );
-          //   }).toList(),
-          // );
         });
   }
 }

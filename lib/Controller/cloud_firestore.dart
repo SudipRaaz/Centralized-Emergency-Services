@@ -20,6 +20,7 @@ class MyCloudStore extends MyCloudStoreBase {
 
   @override
   Future requestService(
+      int caseID,
       String uid,
       String name,
       String phoneNumber,
@@ -40,6 +41,7 @@ class MyCloudStore extends MyCloudStoreBase {
 
     // model fill
     final request = RequestModel(
+        caseID: caseID,
         uid: uid,
         name: name,
         phoneNumber: phoneNumber,
@@ -47,8 +49,7 @@ class MyCloudStore extends MyCloudStoreBase {
         fireBrigadeService: fireBrigade,
         policeService: police,
         message: message,
-        latitude: latitude,
-        longitude: longitude,
+        userLocation: GeoPoint(latitude, longitude),
         requestedAt: timestamp,
         status: status);
 

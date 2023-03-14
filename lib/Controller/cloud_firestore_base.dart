@@ -5,6 +5,7 @@ abstract class MyCloudStoreBase {
   Future registerUser(String? uid, String name, String email, int phoneNumber);
 
   Future requestService(
+      int caseID,
       String uid,
       String name,
       String phoneNumber,

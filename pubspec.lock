@@ -368,6 +368,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.0"
+  min_id:
+    dependency: "direct main"
+    description:
+      name: min_id
+      sha256: "52f451db780cd2164ef017fc13fc9466c36560b7b547d001ccab5f4788d2a739"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   nested:
     dependency: transitive
     description:

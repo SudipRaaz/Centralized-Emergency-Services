@@ -1,8 +1,13 @@
 import 'package:ems_project/resource/constants/colors.dart';
 import 'package:ems_project/resource/constants/constant_values.dart';
+import 'package:ems_project/view/dashboard_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart' as loc;
+import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 
 class ServicePage extends StatefulWidget {
   const ServicePage({super.key});
@@ -16,7 +21,7 @@ class _ServicePageState extends State<ServicePage> {
   final List<Marker> _markers = [];
 
   // locations
-  LatLng sourceLocation = LatLng(27.6772194524, 85.3168201447);
+  late LatLng sourceLocation = LatLng(27.6772194524, 85.3168201447);
   LatLng destinationLocation = LatLng(27.6841741279, 85.3193950653);
 
   @override
@@ -83,22 +88,26 @@ class _ServicePageState extends State<ServicePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ambulance Services'),
-        backgroundColor: AppColors.appBar_theme,
-      ),
-      body: GoogleMap(
-        onMapCreated: (GoogleMapController controller) {
-          _controller = controller;
-        },
-        polylines: Set<Polyline>.of(polylinesMap.values),
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(27.689875, 85.319178),
-          zoom: 14.0,
+    return Consumer<DashboardPage>(
+        builder: (context, dashboardProvider, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Ambulance Services'),
+          backgroundColor: AppColors.appBar_theme,
         ),
-        markers: Set.from(_markers),
-      ),
-    );
+        body: GoogleMap(
+          onMapCreated: (GoogleMapController controller) {
+            _controller = controller;
+          },
+          myLocationEnabled: true,
+          polylines: Set<Polyline>.of(polylinesMap.values),
+          initialCameraPosition: const CameraPosition(
+            target: LatLng(27.689875, 85.319178),
+            zoom: 14.0,
+          ),
+          markers: Set.from(_markers),
+        ),
+      );
+    });
   }
 }

@@ -5,6 +5,7 @@ import 'package:ems_project/Controller/cloud_firestore_base.dart';
 import 'package:ems_project/resource/constants/sized_box.dart';
 import 'package:ems_project/resource/constants/style.dart';
 import 'package:flutter/material.dart';
+import 'package:min_id/min_id.dart';
 import 'package:rating_dialog/rating_dialog.dart';
 
 import '../../Controller/authentication_functions.dart';
@@ -51,6 +52,8 @@ class ShowDialog {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
+        // case id
+        final caseID = int.parse(MinId.getId('10{d}'));
         return AlertDialog(
           title: Text('$category Service'),
           content: SingleChildScrollView(
@@ -100,6 +103,7 @@ class ShowDialog {
                     // object of abstract class
                     MyCloudStoreBase object = MyCloudStore();
                     object.requestService(
+                        caseID,
                         Authentication().currentUser!.uid,
                         name,
                         phoneNumber,
@@ -132,10 +136,11 @@ class ShowDialog {
     bool checkAmbulance = false;
     bool checkFireBrigade = false;
     bool checkPolice = false;
-
     return await showDialog(
         context: context,
         builder: (context) {
+          // case id
+          final caseID = int.parse(MinId.getId('10{d}'));
           // for stateful layout builder
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
@@ -216,6 +221,7 @@ class ShowDialog {
                           // object of abstract class
                           MyCloudStoreBase object = MyCloudStore();
                           object.requestService(
+                              caseID,
                               Authentication().currentUser!.uid,
                               name,
                               phoneNumber,

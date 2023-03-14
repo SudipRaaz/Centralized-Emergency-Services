@@ -1,35 +1,47 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RequestModel {
+  int caseID;
   // user ID
   String uid;
   String name;
   String phoneNumber;
+  // user location
+  GeoPoint userLocation;
   // requested service
   bool ambulanceService;
   bool fireBrigadeService;
   bool policeService;
   // message
   String message;
-  // user location
-  double latitude;
-  double longitude;
   // timestamp
   DateTime requestedAt;
   DateTime? allotedAt;
   // service alloted ID
   String? ambulanceAllotedID;
+  GeoPoint? ambulanceLocation;
+
+// firebrigade service
   String? fireBrigadeAllotedID;
+  GeoPoint? fireBrigadeLocation;
+  // police service
   String? policeAllotedID;
+  GeoPoint? policeLocation;
   // service alloted bool
   bool ambulanceServiceAlloted;
   bool fireBrigadeServiceAlloted;
   bool policeServiceAlloted;
+
+  // response
   String? responseMessage;
+
+  // case status
   String? status;
 
   RequestModel(
-      {
+      {required this.caseID,
       // user ID
       required this.uid,
       required this.name,
@@ -41,15 +53,19 @@ class RequestModel {
       // user's message
       required this.message,
       // user location
-      required this.latitude,
-      required this.longitude,
+      required this.userLocation,
       // timestamp
       required this.requestedAt,
       this.allotedAt,
       // service alloted
       this.ambulanceAllotedID,
+      this.ambulanceLocation,
+      // firebrigade service
       this.fireBrigadeAllotedID,
+      this.fireBrigadeLocation,
+      // police service
       this.policeAllotedID,
+      this.policeLocation,
       // service alloted bool
       this.ambulanceServiceAlloted = false,
       this.fireBrigadeServiceAlloted = false,
@@ -60,20 +76,29 @@ class RequestModel {
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
     return RequestModel(
+        caseID: json['caseID'],
         uid: json["uid"] as String,
         name: json["name"] as String,
         phoneNumber: json["phoneNumber"] as String,
+        userLocation: json["userLocation"],
         ambulanceService: json["ambulanceService"],
         fireBrigadeService: json["fireBrigadeService"],
         policeService: json["policeService"],
         message: json["message"],
-        latitude: json["latitude"] as double,
-        longitude: json["longitude"] as double,
         requestedAt: json["requestedAt"],
         allotedAt: json["allotedAt"],
+
+        // ambulance service
         ambulanceAllotedID: json["ambulanceAllotedID"],
+        ambulanceLocation: json["ambulanceLocation"],
+
+        // fire brigade service
         fireBrigadeAllotedID: json["fireBrigadeAllotedID"],
+        fireBrigadeLocation: json["fireBrigadeLocation"],
+
+        // police service
         policeAllotedID: json["policeAllotedID"],
+        policeLocation: json["policeLocation"],
         ambulanceServiceAlloted: json["ambulanceServiceAlloted"],
         fireBrigadeServiceAlloted: json["fireBrigadeServiceAlloted"],
         policeServiceAlloted: json["policeServiceAlloted"],
@@ -82,6 +107,7 @@ class RequestModel {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
+        'caseID': caseID,
         'uid': uid,
         'name': name,
         'phoneNumber': phoneNumber,
@@ -89,13 +115,23 @@ class RequestModel {
         'fireBrigadeService': fireBrigadeService,
         'policeService': policeService,
         'message': message,
-        'latitude': latitude,
-        'longitude': longitude,
+        'userLocation': userLocation,
         'requestedAt': requestedAt,
         'allotedAt': allotedAt,
+
+        // ambulance service
         'ambulanceAllotedID': ambulanceAllotedID,
+        'ambulanceLocation': ambulanceLocation,
+
+        // fire brigade service
         'fireBrigadeAllotedID': fireBrigadeAllotedID,
+        'fireBrigadeLocation': fireBrigadeLocation,
+
+        // police service
         'policeAllotedID': policeAllotedID,
+        'policeLocation': policeLocation,
+
+        // alloted service check bool
         'ambulanceServiceAlloted': ambulanceServiceAlloted,
         'fireBrigadeServiceAlloted': fireBrigadeServiceAlloted,
         'policeServiceAlloted': policeServiceAlloted,

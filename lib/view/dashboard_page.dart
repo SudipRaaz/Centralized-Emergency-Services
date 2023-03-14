@@ -8,6 +8,7 @@ import 'package:ems_project/utilities/InfoDisplay/dialogbox.dart';
 import 'package:ems_project/view/service_map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:min_id/min_id.dart';
 import '../resource/constants/colors.dart';
 import '../utilities/InfoDisplay/message.dart';
 
