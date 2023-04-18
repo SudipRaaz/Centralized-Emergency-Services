@@ -1,8 +1,13 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:ems_project/model/request_model.dart';
 import 'package:ems_project/resource/components/buttons.dart';
+import 'package:ems_project/resource/components/gardientButton.dart';
 import 'package:ems_project/view/google_map.dart';
+import 'package:ems_project/view/google_map_track1.dart';
+import 'package:ems_project/view/google_map_track2.dart';
 import 'package:ems_project/view/service_map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,8 +22,7 @@ class HistoryPage extends StatelessWidget {
     final uid = Authentication().currentUser!.uid;
     final Stream<QuerySnapshot> _userHistory = FirebaseFirestore.instance
         .collection('CustomerRequests')
-        .doc('Requests')
-        .collection(uid)
+        .where('uid', isEqualTo: uid)
         .snapshots();
 
     // list
@@ -49,7 +53,7 @@ class HistoryPage extends StatelessWidget {
             ),
             body: SizedBox(
                 height: MediaQuery.of(context).size.height,
-                child: ListView.separated(
+                child: ListView.builder(
                   itemBuilder: (context, index) {
                     // formating timestamp from firebase data
                     Timestamp timestamp = historyDocs[index]['requestedAt'];
@@ -94,36 +98,16 @@ class HistoryPage extends StatelessWidget {
                               Text(
                                 '''
 Status :  ${historyDocs[index]['Status']}
-Case ID: 
+Case ID: ${historyDocs[index]['caseID']} 
 Date: ${dateTime.year}/${dateTime.month}/${dateTime.day}        Time: ${dateTime.hour}:${dateTime.minute}:${dateTime.second} 
-Requeseted Service :  $requestService
+Requested Service :  $requestService
 Message : ${historyDocs[index]['message']}
 Response
 $serviceAlloted
 ''',
                                 style: const TextStyle(fontSize: 18),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Buttons(
-                                      text: "Track",
-                                      onPress: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    MyMap(
-                                                      userLocation:
-                                                          historyDocs[index]
-                                                              ['userLocation'],
-                                                      caseID: historyDocs[index]
-                                                          ['caseID'],
-                                                    )));
-                                      })
-                                ],
-                              )
+                              trackGeoLocation(context, historyDocs, index)
                             ],
                           ),
                         ),
@@ -131,13 +115,110 @@ $serviceAlloted
                     );
                   },
                   itemCount: historyDocs.length,
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(
-                      height: 8,
-                    );
-                  },
                 )),
           );
         });
+  }
+
+  Widget trackGeoLocation(
+      BuildContext context, List<dynamic> historyDocs, int index) {
+    if (historyDocs[index]['Status'] == 'In Progress') {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          MyGradientButton(
+            text: "Track",
+            onPress: () {
+              if (historyDocs[index]['ambulanceServiceAlloted'] &&
+                  historyDocs[index]['fireBrigadeServiceAlloted'] &&
+                  historyDocs[index]['policeServiceAlloted']) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyMapTrack3(
+                              userLocation: historyDocs[index]['userLocation'],
+                              ambulanceStaffID: historyDocs[index]
+                                  ['ambulanceAllotedID'],
+                              fireBrigadeStaffID: historyDocs[index]
+                                  ['fireBrigadeAllotedID'],
+                              policeStaffID: historyDocs[index]
+                                  ['policeAllotedID'],
+                            )));
+              }
+              // double service requests tracking
+              else if (historyDocs[index]['ambulanceServiceAlloted'] &&
+                  historyDocs[index]['fireBrigadeServiceAlloted']) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyMapTrack2(
+                              userLocation: historyDocs[index]['userLocation'],
+                              staffID1: historyDocs[index]
+                                  ['ambulanceAllotedID'],
+                              staffID2: historyDocs[index]
+                                  ['fireBrigadeAllotedID'],
+                            )));
+              } else if (historyDocs[index]['ambulanceServiceAlloted'] &&
+                  historyDocs[index]['policeServiceAlloted']) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyMapTrack2(
+                              userLocation: historyDocs[index]['userLocation'],
+                              staffID1: historyDocs[index]
+                                  ['ambulanceAllotedID'],
+                              staffID2: historyDocs[index]['policeAllotedID'],
+                            )));
+              } else if (historyDocs[index]['fireBrigadeServiceAlloted'] &&
+                  historyDocs[index]['policeServiceAlloted']) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyMapTrack2(
+                              userLocation: historyDocs[index]['userLocation'],
+                              staffID1: historyDocs[index]
+                                  ['fireBrigadeAllotedID'],
+                              staffID2: historyDocs[index]['policeAllotedID'],
+                            )));
+              }
+              // single service requets tracking
+              else if (historyDocs[index]['fireBrigadeServiceAlloted']) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyMapTrack1(
+                              userLocation: historyDocs[index]['userLocation'],
+                              staffID1: historyDocs[index]
+                                  ['fireBrigadeAllotedID'],
+                            )));
+              } else if (historyDocs[index]['ambulanceServiceAlloted']
+                  as bool) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyMapTrack1(
+                              userLocation: historyDocs[index]['userLocation'],
+                              staffID1: historyDocs[index]
+                                  ['ambulanceAllotedID'],
+                            )));
+              } else if (historyDocs[index]['policeServiceAlloted']) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyMapTrack1(
+                              userLocation: historyDocs[index]['userLocation'],
+                              staffID1: historyDocs[index]['policeAllotedID'],
+                            )));
+              } else {
+                log('did matched any of');
+              }
+            },
+            iconData: Icons.location_on,
+          )
+        ],
+      );
+    } else {
+      return const SizedBox();
+    }
   }
 }

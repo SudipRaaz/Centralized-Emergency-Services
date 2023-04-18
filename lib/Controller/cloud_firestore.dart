@@ -33,11 +33,8 @@ class MyCloudStore extends MyCloudStoreBase {
       DateTime timestamp,
       String status) async {
     // document references
-    final docReq = FirebaseFirestore.instance
-        .collection('CustomerRequests')
-        .doc('Requests')
-        .collection(uid)
-        .doc();
+    final docReq =
+        FirebaseFirestore.instance.collection('CustomerRequests').doc();
 
     // model fill
     final request = RequestModel(

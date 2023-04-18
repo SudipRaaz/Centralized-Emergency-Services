@@ -45,9 +45,7 @@ class ProfilePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     addVerticalSpace(20),
-                    const CircleAvatar(
-                      radius: 50,
-                    ),
+
                     addVerticalSpace(20),
                     // Text("Name: ${userDocs[0]['name']}"),
                     Text("Name: ${data['Name']}"),

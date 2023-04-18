@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ems_project/Controller/authentication_base.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:ems_project/resource/constants/constant_values.dart';
+import 'package:ems_project/resource/constants/sized_box.dart';
 import 'package:ems_project/utilities/InfoDisplay/dialogbox.dart';
 import 'package:ems_project/view/service_map_page.dart';
 import 'package:flutter/material.dart';
@@ -131,51 +132,51 @@ class _DashboardPageState extends State<DashboardPage> {
               body: SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text("Panic Mode "),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                  shape: const StadiumBorder(),
-                                  backgroundColor: AppColors.button_color,
-                                  foregroundColor: AppColors.blackColor),
-                              child: const Text('Enable'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                  return ServicePage();
-                                }));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  shape: const StadiumBorder(),
-                                  backgroundColor: AppColors.button_color,
-                                  foregroundColor: AppColors.blackColor),
-                              child: const Text('Map'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Text(
-                        "$latitude   $longitude, ${data['Name']}, ${data['PhoneNumber']}"),
+                    // SizedBox(
+                    //   height: 100,
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.symmetric(
+                    //         vertical: 8.0, horizontal: 30),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //       children: [
+                    //         const Text("Panic Mode "),
+                    //         ElevatedButton(
+                    //           onPressed: () {},
+                    //           style: ElevatedButton.styleFrom(
+                    //               shape: const StadiumBorder(),
+                    //               backgroundColor: AppColors.button_color,
+                    //               foregroundColor: AppColors.blackColor),
+                    //           child: const Text('Enable'),
+                    //         ),
+                    //         ElevatedButton(
+                    //           onPressed: () {
+                    //             Navigator.push(context, MaterialPageRoute(
+                    //                 builder: (BuildContext context) {
+                    //               return ServicePage();
+                    //             }));
+                    //           },
+                    //           style: ElevatedButton.styleFrom(
+                    //               shape: const StadiumBorder(),
+                    //               backgroundColor: AppColors.button_color,
+                    //               foregroundColor: AppColors.blackColor),
+                    //           child: const Text('Map'),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                    // Text(
+                    //     "$latitude   $longitude, ${data['Name']}, ${data['PhoneNumber']}"),
                     // tile lists
                     SizedBox(
                       height: height,
                       width: width,
                       child: GridView.builder(
                           gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            childAspectRatio: 3 / 3,
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount:
+                                2, // Set to 2 to display only two horizontal elements
                           ),
                           itemCount: EmergencyServices.servicesTiles.length,
                           itemBuilder: (BuildContext context, index) {
@@ -232,6 +233,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 }
                               },
                               index: index,
+                              iconData: EmergencyServices().iconData[index],
                             );
                           }),
                     ),
@@ -245,7 +247,12 @@ class _DashboardPageState extends State<DashboardPage> {
 class DashboardTile extends StatelessWidget {
   final VoidCallback onPress;
   final int index;
-  const DashboardTile({super.key, required this.onPress, required this.index});
+  IconData iconData;
+  DashboardTile(
+      {super.key,
+      required this.onPress,
+      required this.index,
+      required this.iconData});
 
   @override
   Widget build(BuildContext context) {
@@ -268,9 +275,19 @@ class DashboardTile extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const Spacer(
+                  flex: 1,
+                ),
+                Icon(
+                  iconData,
+                  size: 80,
+                ),
+                const Spacer(
+                  flex: 1,
+                ),
                 Text(EmergencyServices.servicesTiles[index]),
               ],
             ),

@@ -38,6 +38,7 @@ dependencies:
   another_flushbar: ^1.12.29  # message carrier
   provider: ^6.0.5 #state management
   rating_dialog: ^2.0.4 #rating dialog box
+  multiple_stream_builder: ^3.0.2
   # Map
   google_maps_flutter: ^2.2.3 #google map
   flutter_polyline_points: ^1.0.0 # draw lines on map
