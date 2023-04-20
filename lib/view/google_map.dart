@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:flutter/material.dart';

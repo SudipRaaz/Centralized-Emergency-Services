@@ -1,16 +1,11 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
-import 'package:ems_project/model/request_model.dart';
-import 'package:ems_project/resource/components/buttons.dart';
 import 'package:ems_project/resource/components/gardientButton.dart';
+import 'package:ems_project/utilities/InfoDisplay/message.dart';
 import 'package:ems_project/view/google_map.dart';
 import 'package:ems_project/view/google_map_track1.dart';
 import 'package:ems_project/view/google_map_track2.dart';
-import 'package:ems_project/view/service_map_page.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../resource/constants/colors.dart';
 
@@ -210,7 +205,7 @@ $serviceAlloted
                               staffID1: historyDocs[index]['policeAllotedID'],
                             )));
               } else {
-                log('did matched any of');
+                Message.flutterToast(context, 'Could not Track');
               }
             },
             iconData: Icons.location_on,

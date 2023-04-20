@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +88,7 @@ class _MyMapTrack2State extends State<MyMapTrack2> {
           Marker marker2 = Marker(
             icon: BitmapDescriptor.defaultMarkerWithHue(
                 BitmapDescriptor.hueGreen),
-            markerId: MarkerId('fireBrigadeLocation'),
+            markerId: const MarkerId('fireBrigadeLocation'),
             position: LatLng(staff2Location[0]['Location']?.latitude,
                 staff2Location[0]['Location'].longitude),
             infoWindow: InfoWindow(

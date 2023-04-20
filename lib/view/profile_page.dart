@@ -11,6 +11,9 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _width = MediaQuery.of(context).size.width;
+    final _height = MediaQuery.of(context).size.height;
+
     final userID = Authentication().currentUser!.uid;
     final _userProfile =
         FirebaseFirestore.instance.collection('Users').doc(userID).get();
@@ -45,11 +48,38 @@ class ProfilePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     addVerticalSpace(20),
-
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: _width,
+                        // height: _height,
+                        decoration: BoxDecoration(
+                          color: AppColors.appBar_theme,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Name: ${data['Name']}",
+                                style: MyTextStyle().profile_page_credentials,
+                              ),
+                              Text(
+                                "Email: ${data['Email']}",
+                                style: MyTextStyle().profile_page_credentials,
+                              ),
+                              Text(
+                                "Phone Number: ${data['PhoneNumber']}",
+                                style: MyTextStyle().profile_page_credentials,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     addVerticalSpace(20),
-                    // Text("Name: ${userDocs[0]['name']}"),
-                    Text("Name: ${data['Name']}"),
-                    addVerticalSpace(60),
                     _featureTiles(
                       text: 'Feedback',
                       onPress: () {
@@ -68,10 +98,6 @@ class ProfilePage extends StatelessWidget {
                         ShowDialog().reportBug(context, () {});
                       },
                     ),
-                    _featureTiles(
-                      text: 'Log Out',
-                      onPress: () {},
-                    ),
                   ],
                 ),
               ],
@@ -79,6 +105,11 @@ class ProfilePage extends StatelessWidget {
           );
         });
   }
+}
+
+class MyTextStyle {
+  TextStyle profile_page_credentials =
+      const TextStyle(fontSize: 18, color: Colors.white);
 }
 
 class _featureTiles extends StatelessWidget {
@@ -93,7 +124,7 @@ class _featureTiles extends StatelessWidget {
       child: InkWell(
         onTap: onPress,
         child: ListTile(
-          selectedTileColor: Colors.indigo,
+          selectedTileColor: AppColors.appBar_theme,
           tileColor: Colors.blueAccent,
           selected: true,
           title: Text(

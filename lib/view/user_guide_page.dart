@@ -1,6 +1,5 @@
+import 'package:ems_project/resource/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class UserGuidePage extends StatelessWidget {
   const UserGuidePage({super.key});
@@ -10,12 +9,13 @@ class UserGuidePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('User Guide'),
+        backgroundColor: AppColors.appBar_theme,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: const <Widget>[
             Text(
               'Navigating Within the Application',
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),

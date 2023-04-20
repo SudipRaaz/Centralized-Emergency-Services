@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ems_project/Controller/authentication_base.dart';
 import 'package:ems_project/Controller/authentication_functions.dart';
@@ -77,7 +75,6 @@ class _DashboardPageState extends State<DashboardPage> {
         latitude = position.latitude;
         longitude = position.longitude;
       });
-      log('position:  : ${position.accuracy}');
     });
     return position;
   }
@@ -94,14 +91,16 @@ class _DashboardPageState extends State<DashboardPage> {
     return FutureBuilder(
         future: userProfile,
         builder: (BuildContext context, snapshot) {
-          if (snapshot.hasError) {
-            return Text("Error: " + snapshot.hasError.toString());
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
+            return const Center(child: Text("Loading"));
           }
           if (snapshot.connectionState == ConnectionState.none) {
-            return Text("Error: " + snapshot.error.toString());
+            return Text("Error: ${snapshot.error}");
           }
           //clearing the productsDocs list
           userDocs = [];
